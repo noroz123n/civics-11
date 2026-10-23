@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מסלול אזרחות יא׳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky tab bar; definitions set in a serif "document" face, key words marked like a highlighter in a notebook */
+:root {
+  --bg: #F3F6FA;
+  --surface: #FFFFFF;
+  --ink: #15223A;
+  --muted: #56647D;
+  --line: #D8E0EC;
+  --accent: #1B5BB3;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E2EBF8;
+  --mark: #FFE27A;
+  --good: #1D7A4E;
+  --good-soft: #DFF2E8;
+  --bad: #B2372F;
+  --bad-soft: #F8E2DF;
+  --warn-soft: #FFF3D1;
+  --font-display: "Frank Ruhl Libre", "David", "Times New Roman", serif;
+  --font-body: "Assistant", "Segoe UI", "Arial Hebrew", Arial, sans-serif;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1420; --surface: #161E2E; --ink: #E5EBF4; --muted: #9AA8BF; --line: #28344B;
+    --accent: #7EB0F2; --accent-ink: #0E1420; --accent-soft: #1A2A44; --mark: rgba(224, 178, 40, .38);
+    --good: #63C796; --good-soft: #15301F; --bad: #F08B80; --bad-soft: #3A1D1A; --warn-soft: #3A3014;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1420; --surface: #161E2E; --ink: #E5EBF4; --muted: #9AA8BF; --line: #28344B;
+  --accent: #7EB0F2; --accent-ink: #0E1420; --accent-soft: #1A2A44; --mark: rgba(224, 178, 40, .38);
+  --good: #63C796; --good-soft: #15301F; --bad: #F08B80; --bad-soft: #3A1D1A; --warn-soft: #3A3014;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.65; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+#app { min-height: 100%; }
+.gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.col { max-width: 46rem; margin: 0 auto; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.25; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button, select, textarea, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .col { display: flex; align-items: center; gap: 12px; padding-block: 10px 0; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; background: none; border: 0; padding: 0; }
+.nav { display: flex; gap: 4px; overflow-x: auto; width: 100%; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav button { background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 10px 9px; white-space: nowrap; color: var(--muted); font-weight: 600; }
+.nav button[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+main { padding-block: 24px 64px; }
+.stack { display: flex; flex-direction: column; gap: 20px; }
+.lead { color: var(--muted); max-width: 40rem; }
+.eyebrow { font-size: .8rem; font-weight: 700; letter-spacing: .04em; color: var(--muted); }
+
+/* buttons */
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 16px; font-weight: 600; }
+.btn:hover { border-color: var(--accent); }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.good { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+.btn.bad { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.btn.mid { background: var(--warn-soft); }
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* home */
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; }
+.stat b { display: block; font-family: var(--font-display); font-size: 1.9rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .85rem; color: var(--muted); }
+.steps { margin: 0; padding-inline-start: 1.3em; display: grid; gap: 4px; }
+.sess { display: grid; gap: 10px; }
+.srow { display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; }
+.snum { font-family: var(--font-display); font-size: 2.2rem; line-height: 1; color: var(--accent); text-align: center; }
+.srow h3 { font-size: 1.15rem; }
+.meta { font-size: .85rem; color: var(--muted); }
+.bar { height: 6px; border-radius: 3px; background: var(--accent-soft); overflow: hidden; margin-top: 8px; }
+.bar i { display: block; height: 100%; background: var(--good); }
+@media (max-width: 560px) {
+  .srow { grid-template-columns: 2.4rem minmax(0, 1fr); }
+  .srow .row { grid-column: 1 / -1; }
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .stat b { font-size: 1.5rem; }
+}
+
+/* session */
+.shead { display: grid; gap: 10px; }
+.group { font-size: 1.35rem; padding-top: 12px; border-top: 2px solid var(--ink); margin-top: 8px; }
+.cc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; display: grid; gap: 12px; scroll-margin-top: 120px; }
+.cc header { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.cc h4 { font-size: 1.3rem; }
+.pg { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pill { font-size: .75rem; font-weight: 700; padding: 1px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--muted); margin-inline-start: auto; }
+.pill.lrn { background: var(--warn-soft); color: var(--ink); }
+.pill.ok { background: var(--good-soft); color: var(--good); }
+.def p { font-family: var(--font-display); font-size: 1.12rem; line-height: 1.75; }
+.lbl { font-size: .75rem; font-weight: 700; color: var(--muted); letter-spacing: .03em; margin-bottom: 2px; }
+.lbl em { font-style: normal; color: var(--bad); }
+mark.k { background: linear-gradient(transparent 52%, var(--mark) 52%); color: inherit; padding: 0 1px; }
+dl.items { margin: 0; display: grid; gap: 8px; }
+dl.items div { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 12px; padding-top: 8px; border-top: 1px dashed var(--line); }
+dl.items dt { font-weight: 700; }
+dl.items dd { margin: 0; }
+@media (max-width: 560px) { dl.items div { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+.note { font-size: .95rem; color: var(--ink); }
+.note > span { font-size: .75rem; font-weight: 700; color: var(--muted); margin-inline-end: 6px; }
+.mn { background: var(--accent-soft); border-radius: 8px; padding: 6px 12px; font-weight: 600; }
+.vs { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: .85rem; color: var(--muted); }
+.chip { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 1px 10px; font-size: .85rem; color: var(--ink); }
+.chip:hover { border-color: var(--accent); }
+.cc footer { display: flex; gap: 8px; flex-wrap: wrap; }
+.cc footer .btn { padding: 4px 12px; font-size: .9rem; }
+.ans { position: relative; display: grid; gap: 12px; }
+.hide .ans:not(.open) > * { filter: blur(7px); user-select: none; pointer-events: none; }
+.hide .ans:not(.open) { cursor: pointer; }
+.hide .ans:not(.open)::after { content: "נסה להיזכר, ואז הקש כאן כדי לחשוף"; position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; color: var(--accent); text-align: center; padding: 8px; }
+
+/* flashcard / exam */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 18px; display: grid; gap: 14px; }
+.term { font-family: var(--font-display); font-size: 1.9rem; }
+textarea { width: 100%; min-height: 7rem; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); padding: 10px 12px; resize: vertical; line-height: 1.6; }
+textarea.big { min-height: 12rem; }
+select { border: 1px solid var(--line); border-radius: 999px; background: var(--surface); padding: 6px 12px; max-width: 100%; }
+.diff { font-family: var(--font-display); font-size: 1.1rem; line-height: 2; background: var(--bg); border-radius: var(--r); padding: 10px 14px; overflow-wrap: anywhere; }
+.diff .ok { color: var(--good); }
+.diff .miss { background: var(--warn-soft); outline: 1px dashed var(--bad); border-radius: 3px; padding: 0 2px; }
+.diff .extra { color: var(--bad); text-decoration: line-through; }
+.legend { font-size: .8rem; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+.score { font-family: var(--font-display); font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.scen { font-family: var(--font-display); font-size: 1.12rem; line-height: 1.8; border-inline-start: 3px solid var(--line); padding-inline-start: 14px; }
+.scen mark.q { background: var(--mark); color: inherit; }
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 560px) { .opts { grid-template-columns: minmax(0, 1fr); } }
+.opt { text-align: start; border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); padding: 10px 14px; font-weight: 600; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt.right { background: var(--good-soft); border-color: var(--good); color: var(--good); }
+.opt.wrong { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.opt:disabled { cursor: default; }
+.model { display: grid; gap: 10px; }
+.model > div { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 10px; }
+.model b { font-family: var(--font-display); color: var(--accent); }
+.tabs2 { display: flex; gap: 6px; flex-wrap: wrap; }
+.verdict { font-weight: 700; }
+.verdict.y { color: var(--good); }
+.verdict.n { color: var(--bad); }
+.empty { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--r); padding: 18px; color: var(--muted); }
+.guide h3 { font-size: 1.3rem; margin-top: 8px; }
+.guide ol, .guide ul { margin: 0; padding-inline-start: 1.3em; display: grid; gap: 4px; }
+.tmpl { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; font-family: var(--font-display); font-size: 1.05rem; }
+.tbl { overflow-x: auto; }
+.tbl table { border-collapse: collapse; width: 100%; min-width: 26rem; background: var(--surface); }
+.tbl th, .tbl td { border: 1px solid var(--line); padding: 8px 10px; text-align: start; vertical-align: top; }
+.tbl th { background: var(--accent-soft); }
+@media (prefers-reduced-motion: no-preference) {
+  .hide .ans > * { transition: filter .15s; }
+}
+</style>
+</head>
+<body>
+<div id="app" dir="rtl" lang="he">
+  <header class="top gut">
+    <div class="col">
+      <button class="brand" data-go="home">מסלול אזרחות יא׳</button>
+      <nav class="nav" id="nav" aria-label="ניווט"></nav>
+    </div>
+  </header>
+  <main class="gut"><div class="col" id="view"></div></main>
+</div>
+
+<script src="data1.js"></script>
+<script src="data2.js"></script>
+<script>
+(function () {
+  var D = window.CIV, ALL = D.concepts, EV = D.events, BY = {};
+  (function () { var g = '', s = 0; ALL.forEach(function (c) { BY[c.id] = c; if (c.s !== s) { s = c.s; g = ''; } if (c.g) g = c.g; else c.g = g; }); })();
+
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]; }); }
+  function plain(t) { return t.replace(/\*\*/g, ''); }
+  function rich(t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<mark class="k">$1</mark>'); }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function sessOf(n) { return D.sessions[n - 1]; }
+
+  /* ---------- progress ---------- */
+  var KEY = 'civics-progress-v1', DAY = 864e5, INT = [0, .5, 1, 3, 7, 16];
+  var P = { c: {} };
+  try { var raw = localStorage.getItem(KEY); if (raw) { var o = JSON.parse(raw); if (o && o.c) P = o; } } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) {} }
+  function grade(id, q) {
+    var now = Date.now(), o = P.c[id] || { b: 0, r: 0, w: 0 };
+    if (q === 0) { o.b = 0; o.w++; } else if (q === 1) { o.b = Math.max(1, Math.min(o.b, 2)); } else { o.b = Math.min(5, o.b + 1); o.r++; }
+    o.due = now + INT[o.b] * DAY; o.l = now; P.c[id] = o; save();
+  }
+  function status(id) { var o = P.c[id]; if (!o) return ['', 'חדש']; if (o.b >= 3) return ['ok', 'שולט']; return ['lrn', 'בלמידה']; }
+  function stats(list) {
+    var now = Date.now(), r = { n: list.length, seen: 0, m: 0, due: 0 };
+    list.forEach(function (c) { var o = P.c[c.id]; if (o) { r.seen++; if (o.b >= 3) r.m++; if (o.due <= now) r.due++; } });
+    return r;
+  }
+
+  /* ---------- text comparison ---------- */
+  var PUN = /^[,;:.()!?\-]$/;
+  function tokens(s, strict) {
+    s = s.replace(/[֑-ׇ]/g, '').replace(/[״“”„]/g, '"').replace(/[׳‘’`]/g, "'").replace(/[–—־]/g, '-');
+    var out = [], re = /[א-תA-Za-z0-9"'%]+(?:\.[0-9]+)?|[,;:.()!?\-]/g, m;
+    while ((m = re.exec(s))) {
+      var t = m[0];
+      if (PUN.test(t)) { if (strict) out.push({ t: t, k: t }); continue; }
+      var k = strict ? t : t.replace(/^["']+|["']+$/g, '');
+      if (k) out.push({ t: t, k: k });
+    }
+    return out;
+  }
+  function compare(target, typed, strict) {
+    var a = tokens(target, strict), b = tokens(typed, strict), n = a.length, m = b.length, i, j;
+    var dp = []; for (i = 0; i <= n; i++) dp.push(new Uint16Array(m + 1));
+    for (i = n - 1; i >= 0; i--) for (j = m - 1; j >= 0; j--) dp[i][j] = a[i].k === b[j].k ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    var ops = []; i = 0; j = 0;
+    while (i < n && j < m) {
+      if (a[i].k === b[j].k) { ops.push(['ok', a[i].t]); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) { ops.push(['miss', a[i].t]); i++; }
+      else { ops.push(['extra', b[j].t]); j++; }
+    }
+    while (i < n) ops.push(['miss', a[i++].t]);
+    while (j < m) ops.push(['extra', b[j++].t]);
+    var same = dp[0][0], extra = m - same, miss = n - same;
+    return { ops: ops, pct: n ? Math.round(100 * same / (n + extra)) : 100, miss: miss, extra: extra };
+  }
+  function diffHtml(ops) {
+    var h = '', glue = true;
+    ops.forEach(function (o) {
+      var t = o[1], p = PUN.test(t);
+      var space = glue || (p && t !== '(' && t !== '-') ? '' : ' ';
+      h += space + '<span class="' + o[0] + '">' + esc(t) + '</span>';
+      glue = t === '(' || t === '-';
+    });
+    return h;
+  }
+  function diffBlock(target, typed, strict) {
+    var r = compare(target, typed, strict);
+    return '<div class="stack" style="gap:8px"><div class="row"><span class="score">' + r.pct + '%</span><span class="meta">' +
+      (r.miss ? r.miss + ' חסרים' : 'שום דבר לא חסר') + ' · ' + (r.extra ? r.extra + ' מיותרים או שגויים' : 'אין מיותרים') + '</span></div>' +
+      '<div class="diff">' + diffHtml(r.ops) + '</div>' +
+      '<div class="legend"><span><span class="diff" style="padding:0;background:none"><span class="ok">ירוק</span></span> = כמו בחוברת</span><span><span class="diff" style="padding:0;background:none"><span class="miss">מסומן</span></span> = חסר אצלך</span><span><span class="diff" style="padding:0;background:none"><span class="extra">קו חוצה</span></span> = כתבת ואין בחוברת</span></div></div>';
+  }
+  function targetOf(c) { return c.d ? plain(c.d) : (c.it || []).map(function (x) { return x[0]; }).join(', '); }
+
+  /* ---------- routing ---------- */
+  var NAV = [['home', 'מפה'], ['s1', 'מפגש 1'], ['s2', 'מפגש 2'], ['s3', 'מפגש 3'], ['s4', 'מפגש 4'], ['s5', 'מפגש 5'], ['s6', 'מפגש 6'], ['cards', 'שינון'], ['exam', 'תרגול בגרות'], ['exact', 'כתיבה מדויקת'], ['guide', 'איך עונים']];
+  var VIEWS = NAV.map(function (x) { return x[0]; });
+  var view = 'home', hideMode = false, openAns = {};
+  var h0 = (location.hash || '').slice(1); if (VIEWS.indexOf(h0) >= 0) view = h0;
+  try { var hv = localStorage.getItem('civics-hide'); hideMode = hv === '1'; } catch (e) {}
+  function go(v, anchor) {
+    view = v; openAns = {};
+    try { history.replaceState(null, '', '#' + v); } catch (e) {}
+    render();
+    if (anchor) { var el = document.getElementById(anchor); if (el) { el.scrollIntoView(); return; } }
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- views ---------- */
+  function navHtml() {
+    return NAV.map(function (x) { return '<button data-go="' + x[0] + '"' + (x[0] === view ? ' aria-current="page"' : '') + '>' + x[1] + '</button>'; }).join('');
+  }
+
+  function homeHtml() {
+    var st = stats(ALL);
+    var rows = D.sessions.map(function (s) {
+      var list = ALL.filter(function (c) { return c.s === s.n; }), r = stats(list);
+      return '<div class="srow"><div class="snum">' + s.n + '</div><div style="min-width:0"><h3>' + esc(s.title) + '</h3>' +
+        '<div class="meta">עמ\' ' + s.pages + ' בחוברת · ' + list.length + ' מושגים · ' + s.time + (r.due ? ' · ' + r.due + ' לחזרה' : '') + '</div>' +
+        '<div class="bar" title="' + r.m + ' מתוך ' + r.n + ' בשליטה"><i style="width:' + Math.round(100 * r.m / r.n) + '%"></i></div></div>' +
+        '<div class="row"><button class="btn pri" data-go="s' + s.n + '">ללמוד</button><button class="btn" data-cards="' + s.n + '">לשנן</button></div></div>';
+    }).join('');
+    return '<div class="stack">' +
+      '<div class="stack" style="gap:8px"><h1 style="font-size:2rem">כל החומר לאזרחות, בשישה מפגשים</h1>' +
+      '<p class="lead">החומר מהחוברת של כיתה יא׳ (תשפ״ו). כל הגדרה מופיעה בנוסח החוברת, ומילות המפתח שהבודקים מחפשים מסומנות בטוש. איפה שהנוסח מקוצר או מסוכם, כתוב את זה ליד ההגדרה.</p></div>' +
+      '<div class="stats"><div class="stat"><b>' + st.m + '<small style="font-size:1rem;color:var(--muted)">/' + st.n + '</small></b><span>מושגים בשליטה</span></div>' +
+      '<div class="stat"><b>' + st.due + '</b><span>מחכים לחזרה עכשיו</span></div>' +
+      '<div class="stat"><b>' + st.seen + '</b><span>מושגים שכבר תרגלת</span></div></div>' +
+      (st.due ? '<div class="row"><button class="btn pri" data-cards="due">חזרה על ' + st.due + ' המושגים שמחכים</button></div>' : '') +
+      '<div class="stack" style="gap:6px"><div class="eyebrow">איך עובדים במפגש</div><ol class="steps">' +
+      '<li><b>חזרה</b> (5–10 דקות): בשינון, על מה שמחכה לחזרה ממפגשים קודמים.</li>' +
+      '<li><b>לימוד</b>: קרא את המפגש. לכל מושג יש הגדרה, הסבר קצר ודוגמה.</li>' +
+      '<li><b>הסתרה</b>: הפעל "הסתר תשובות" ועבור שוב על המפגש. נסה להיזכר בכל הגדרה לפני שאתה חושף, וסמן "ידעתי" או "עוד לא".</li>' +
+      '<li><b>שינון</b>: כתוב הגדרות מהזיכרון, והאתר יראה לך בדיוק מה חסר.</li>' +
+      '<li><b>שאלות אירוע</b>: בתרגול בגרות, על המושגים של המפגש.</li></ol></div>' +
+      '<div class="sess">' + rows + '</div>' +
+      '<p class="meta">ההתקדמות נשמרת אוטומטית בדפדפן שבו אתה לומד. מושג נחשב "בשליטה" אחרי שענית עליו נכון שלוש פעמים, בהפרשי זמן שהולכים וגדלים.</p>' +
+      '</div>';
+  }
+
+  function conceptHtml(c) {
+    var stt = status(c.id), body = '';
+    if (c.d) body += '<div class="def"><div class="lbl">' + (c.sum ? 'הגדרה · <em>' + esc(c.sum) + '</em>' : (c.exact ? 'נוסח המגילה כפי שמופיע בחוברת' : 'הגדרה · נוסח החוברת')) + '</div><p>' + (c.exact ? esc(c.d) : rich(c.d)) + '</p></div>';
+    if (c.it) body += '<dl class="items">' + c.it.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('') + '</dl>';
+    if (c.m) body += '<p class="mn">' + esc(c.m) + '</p>';
+    if (c.x) body += '<p class="note"><span>בקצרה</span>' + esc(c.x) + '</p>';
+    if (c.e) body += '<p class="note"><span>דוגמה</span>' + esc(c.e) + '</p>';
+    var vs = (c.v || []).filter(function (id) { return BY[id]; });
+    return '<article class="cc" id="c-' + c.id + '"><header><h4>' + esc(c.t) + '</h4><span class="pg">עמ\' ' + c.p + '</span><span class="pill ' + stt[0] + '">' + stt[1] + '</span></header>' +
+      '<div class="ans' + (openAns[c.id] ? ' open' : '') + '" data-open="' + c.id + '">' + body + '</div>' +
+      (vs.length ? '<div class="vs">לא לבלבל עם:' + vs.map(function (id) { return '<button class="chip" data-jump="' + id + '">' + esc(BY[id].t) + '</button>'; }).join('') + '</div>' : '') +
+      '<footer><button class="btn good" data-grade="' + c.id + '" data-q="2">ידעתי</button><button class="btn bad" data-grade="' + c.id + '" data-q="0">עוד לא</button>' +
+      (c.d ? '<button class="btn" data-exact="' + c.id + '">לכתוב מהזיכרון</button>' : '') + '</footer></article>';
+  }
+
+  function sessionHtml(n) {
+    var s = sessOf(n), list = ALL.filter(function (c) { return c.s === n; }), r = stats(list), out = '', g = null;
+    list.forEach(function (c) { if (c.g !== g) { g = c.g; out += '<h3 class="group">' + esc(g) + '</h3>'; } out += conceptHtml(c); });
+    var evs = EV.filter(function (e) { return BY[e.a].s === n; }).length;
+    return '<div class="stack ' + (hideMode ? 'hide' : '') + '"><div class="shead"><div class="eyebrow">מפגש ' + n + ' · עמ\' ' + s.pages + ' · ' + s.time + '</div>' +
+      '<h2 style="font-size:1.9rem">' + esc(s.title) + '</h2>' +
+      '<p class="meta">' + list.length + ' מושגים · ' + r.m + ' בשליטה · ' + r.seen + ' תורגלו</p>' +
+      '<div class="row"><button class="btn" data-toggle-hide aria-pressed="' + hideMode + '">' + (hideMode ? 'מצב הסתרה פעיל' : 'הסתר תשובות') + '</button>' +
+      '<button class="btn pri" data-cards="' + n + '">לשנן את המפגש</button>' +
+      (evs ? '<button class="btn" data-go="exam">' + evs + ' שאלות אירוע</button>' : '') + '</div></div>' + out +
+      (n < 6 ? '<div class="row" style="justify-content:flex-end"><button class="btn" data-go="s' + (n + 1) + '">למפגש ' + (n + 1) + '</button></div>' : '') + '</div>';
+  }
+
+  /* flashcards */
+  var F = { scope: 'due', q: [], i: 0, shown: false, typed: '', tally: [0, 0, 0], requeued: {} };
+  function buildQueue(scope) {
+    var now = Date.now(), pool = ALL.filter(function (c) { return scope === 'due' || scope === 'all' ? true : c.s === +scope; });
+    var due = pool.filter(function (c) { return P.c[c.id] && P.c[c.id].due <= now; }).sort(function (a, b) { return P.c[a.id].due - P.c[b.id].due; });
+    if (scope === 'due') return due.slice(0, 25).map(function (c) { return c.id; });
+    var fresh = pool.filter(function (c) { return !P.c[c.id]; });
+    var later = pool.filter(function (c) { return P.c[c.id] && P.c[c.id].due > now; }).sort(function (a, b) { return P.c[a.id].b - P.c[b.id].b; });
+    return due.concat(fresh, later).slice(0, 20).map(function (c) { return c.id; });
+  }
+  function startCards(scope) { F = { scope: String(scope), q: buildQueue(String(scope)), i: 0, shown: false, typed: '', tally: [0, 0, 0], requeued: {} }; }
+  function cardsHtml() {
+    var opts = '<option value="due">מה שמחכה לחזרה</option><option value="all">כל המושגים</option>' + D.sessions.map(function (s) { return '<option value="' + s.n + '">מפגש ' + s.n + ' – ' + esc(s.title) + '</option>'; }).join('');
+    var head = '<div class="stack" style="gap:8px"><h2 style="font-size:1.9rem">שינון</h2><p class="lead">רואים מושג, מנסים להיזכר בהגדרה (רצוי לכתוב אותה), חושפים ומדרגים את עצמך. מה שלא ידעת יחזור מהר יותר.</p>' +
+      '<div class="row"><select id="scope" aria-label="מה לשנן">' + opts.replace('value="' + F.scope + '"', 'value="' + F.scope + '" selected') + '</select><button class="btn" data-restart>התחל סבב</button></div></div>';
+    if (!F.q.length) return '<div class="stack">' + head + '<div class="empty">' + (F.scope === 'due' ? 'אין כרגע מושגים שמחכים לחזרה. בחר מפגש ולחץ "התחל סבב".' : 'אין מושגים בבחירה הזאת.') + '</div></div>';
+    if (F.i >= F.q.length) {
+      return '<div class="stack">' + head + '<div class="card"><h3 style="font-size:1.5rem">סיימת את הסבב</h3><p>ידעת ' + F.tally[2] + ' · חלקית ' + F.tally[1] + ' · לא ידעת ' + F.tally[0] + '</p>' +
+        '<div class="row"><button class="btn pri" data-restart>סבב נוסף</button><button class="btn" data-go="home">למפה</button></div></div></div>';
+    }
+    var c = BY[F.q[F.i]], s = sessOf(c.s);
+    var prompt = c.q || (c.d ? 'מה ההגדרה?' : 'מנה את הפריטים והסבר כל אחד.');
+    var card = '<div class="card"><div class="row" style="justify-content:space-between"><span class="eyebrow">מפגש ' + c.s + ' · ' + esc(c.g) + '</span><span class="meta">' + (F.i + 1) + ' / ' + F.q.length + '</span></div>' +
+      '<div class="term">' + esc(c.t) + '</div><p class="meta">' + esc(prompt) + '</p>';
+    if (!F.shown) {
+      card += '<textarea id="ftype" placeholder="כתוב כאן מהזיכרון (לא חובה, אבל ככה זוכרים הכי טוב)">' + esc(F.typed) + '</textarea>' +
+        '<div class="row"><button class="btn pri" data-reveal>הצג תשובה</button></div>';
+    } else {
+      var a = '';
+      if (c.d) a += '<div class="def"><div class="lbl">' + (c.sum ? 'הגדרה · <em>' + esc(c.sum) + '</em>' : 'נוסח החוברת') + '</div><p>' + (c.exact ? esc(c.d) : rich(c.d)) + '</p></div>';
+      if (c.it) a += '<dl class="items">' + c.it.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('') + '</dl>';
+      if (c.m) a += '<p class="mn">' + esc(c.m) + '</p>';
+      if (F.typed.trim()) a += '<div class="stack" style="gap:6px"><div class="eyebrow">ההשוואה שלך מול ' + (c.d ? 'ההגדרה' : 'שמות הפריטים') + '</div>' + diffBlock(targetOf(c), F.typed, false) + '</div>';
+      card += a + '<div class="row"><button class="btn bad" data-rate="0">לא ידעתי</button><button class="btn mid" data-rate="1">חלקית</button><button class="btn good" data-rate="2">ידעתי</button>' +
+        '<button class="chip" data-jump="' + c.id + '" style="margin-inline-start:auto">לכרטיס במפגש ' + c.s + '</button></div>';
+    }
+    return '<div class="stack">' + head + card + '</div></div>';
+  }
+
+  /* exam */
+  var E = { tab: 'events', order: shuffle(EV.map(function (e, i) { return i; })), i: 0, pick: null, typed: '' };
+  var M = { scope: 'all', cur: null, opts: [], pick: null };
+  var STOP = { 'עקרון': 1, 'הזכות': 1, 'זכות': 1, 'זכויות': 1, 'חוק': 1, 'יסוד': 1, 'של': 1, 'על': 1, 'או': 1, 'עם': 1, 'בין': 1, 'מושג': 1, 'רקע': 1, 'הגישה': 1, 'רעיון': 1, 'מדינה': 1, 'מדינת': 1, 'שיש': 1, 'בה': 1 };
+  function reEsc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  function masked(c) {
+    var t = plain(c.d);
+    c.t.replace(/\(.*?\)/g, ' ').split(/[\s\/–\-:,]+/).forEach(function (w) {
+      w = w.replace(/^ה/, '');
+      if (w.length < 3 || STOP[w] || STOP['ה' + w]) return;
+      t = t.replace(new RegExp('(^|[\\s("\'])[והבלמש]{0,2}' + reEsc(w) + '[\\u05D0-\\u05EA]{0,3}', 'g'), '$1_____');
+    });
+    return t;
+  }
+  function newMc() {
+    var pool = ALL.filter(function (c) { return c.d && !c.exact && (M.scope === 'all' || c.s === +M.scope); });
+    if (!pool.length) { M.cur = null; return; }
+    var w = pool.map(function (c) { var o = P.c[c.id]; return o ? 6 - o.b : 4; }), tot = w.reduce(function (a, b) { return a + b; }, 0), r = Math.random() * tot, k = 0;
+    while (k < w.length - 1 && r > w[k]) { r -= w[k]; k++; }
+    var c = pool[k] === M.cur ? pool[(k + 1) % pool.length] : pool[k];
+    var near = (c.v || []).map(function (id) { return BY[id]; }).filter(function (x) { return x && x.id !== c.id; });
+    var rest = shuffle(ALL.filter(function (x) { return x.s === c.s && x.id !== c.id && near.indexOf(x) < 0 && !x.exact; }));
+    var d = near.concat(rest).slice(0, 3);
+    M.cur = c; M.opts = shuffle([c].concat(d)); M.pick = null;
+  }
+  function examHtml() {
+    var tabs = '<div class="tabs2"><button class="btn" aria-pressed="' + (E.tab === 'events') + '" data-etab="events">שאלות אירוע</button><button class="btn" aria-pressed="' + (E.tab === 'mc') + '" data-etab="mc">זיהוי מושג לפי הגדרה</button></div>';
+    var head = '<div class="stack" style="gap:8px"><h2 style="font-size:1.9rem">תרגול בגרות</h2>' + tabs + '</div>';
+    if (E.tab === 'mc') {
+      if (!M.cur) newMc();
+      var c = M.cur, opts = '<option value="all">כל המפגשים</option>' + D.sessions.map(function (s) { return '<option value="' + s.n + '">מפגש ' + s.n + '</option>'; }).join('');
+      var body = '<div class="card"><div class="row"><select id="mcscope" aria-label="מאיזה מפגש">' + opts.replace('value="' + M.scope + '"', 'value="' + M.scope + '" selected') + '</select></div>' +
+        '<div class="eyebrow">לאיזה מושג שייכת ההגדרה?</div><p class="scen">' + esc(masked(c)) + '</p><div class="opts">' +
+        M.opts.map(function (o) { var cls = M.pick ? (o === c ? ' right' : (o.id === M.pick ? ' wrong' : '')) : ''; return '<button class="opt' + cls + '" data-mc="' + o.id + '"' + (M.pick ? ' disabled' : '') + '>' + esc(o.t) + '</button>'; }).join('') + '</div>';
+      if (M.pick) body += '<p class="verdict ' + (M.pick === c.id ? 'y">נכון.' : 'n">לא נכון. התשובה: ' + esc(c.t) + '.') + '</p><div class="row"><button class="btn pri" data-mcnext>שאלה הבאה</button><button class="chip" data-jump="' + c.id + '">לכרטיס במפגש ' + c.s + '</button></div>';
+      return '<div class="stack">' + head + body + '</div></div>';
+    }
+    var ev = EV[E.order[E.i]], a = BY[ev.a];
+    var ansLabel = ev.item || a.t;
+    var choices = ev.item ? shuffleOnce(ev.id, [ev.item].concat(ev.alts)) : shuffleOnce(ev.id, [ev.a].concat(ev.o)).map(function (id) { return id; });
+    var text = esc(ev.text);
+    if (E.pick) text = text.replace(esc(ev.quote), '<mark class="q">' + esc(ev.quote) + '</mark>');
+    var card = '<div class="card"><div class="row" style="justify-content:space-between"><span class="eyebrow">שאלת אירוע · מפגש ' + a.s + '</span><span class="meta">' + (E.i + 1) + ' / ' + EV.length + '</span></div>' +
+      '<p class="scen">' + text + '</p><p><b>' + esc(ev.q || 'ציין והצג את המושג הבא לידי ביטוי בקטע. הסבר כיצד הוא בא לידי ביטוי.') + '</b></p>';
+    if (!E.pick) card += '<textarea id="etype" placeholder="כתוב תשובה מלאה לפי ציין-הצג-צטט-הסבר (לא חובה)">' + esc(E.typed) + '</textarea><div class="eyebrow">ואז בחר את המושג:</div>';
+    card += '<div class="opts">' + choices.map(function (o) {
+      var label = ev.item ? o : BY[o].t, isRight = ev.item ? o === ev.item : o === ev.a;
+      var cls = E.pick ? (isRight ? ' right' : (o === E.pick ? ' wrong' : '')) : '';
+      return '<button class="opt' + cls + '" data-ev="' + esc(o) + '"' + (E.pick ? ' disabled' : '') + '>' + esc(label) + '</button>';
+    }).join('') + '</div>';
+    if (E.pick) {
+      var right = ev.item ? E.pick === ev.item : E.pick === ev.a;
+      var present = ev.item ? (a.it.filter(function (x) { return x[0] === ev.item; })[0] || ['', ''])[1] : plain(a.d);
+      card += '<p class="verdict ' + (right ? 'y">נכון.' : 'n">לא נכון. התשובה: ' + esc(ansLabel) + '.') + '</p>' +
+        '<div class="eyebrow">תשובה לדוגמה</div><div class="model">' +
+        '<div><b>ציין</b><span>' + esc(ansLabel) + '</span></div>' +
+        '<div><b>הצג</b><span>' + esc(present) + '</span></div>' +
+        '<div><b>צטט</b><span>בקטע נאמר: "' + esc(ev.quote) + '"</span></div>' +
+        '<div><b>הסבר</b><span>' + esc(ev.why) + '</span></div></div>' +
+        (E.typed.trim() ? '<p class="meta">השווה את מה שכתבת לתשובה לדוגמה: האם יש לך את כל ארבעת החלקים, והאם ההסבר חוזר על מילה מההגדרה?</p><div class="diff" style="font-family:var(--font-body);line-height:1.6">' + esc(E.typed) + '</div>' : '') +
+        '<div class="row"><button class="btn pri" data-evnext>שאלה הבאה</button></div>';
+    }
+    return '<div class="stack">' + head + card + '</div></div>';
+  }
+  var SH = {};
+  function shuffleOnce(key, arr) { if (!SH[key]) SH[key] = shuffle(arr); return SH[key]; }
+
+  /* exact writing */
+  var X = { id: 'p13', strict: true, typed: '', checked: false, show: false };
+  function exactHtml() {
+    var c = BY[X.id];
+    var opts = D.sessions.map(function (s) {
+      return '<optgroup label="מפגש ' + s.n + '">' + ALL.filter(function (x) { return x.s === s.n && x.d; }).map(function (x) { return '<option value="' + x.id + '"' + (x.id === X.id ? ' selected' : '') + '>' + esc(x.t) + '</option>'; }).join('') + '</optgroup>';
+    }).join('');
+    var res = X.checked && X.typed.trim() ? diffBlock(plain(c.d), X.typed, X.strict) : '';
+    return '<div class="stack"><div class="stack" style="gap:8px"><h2 style="font-size:1.9rem">כתיבה מדויקת</h2>' +
+      '<p class="lead">בחר טקסט, כתוב אותו מהזיכרון ובדוק. ההשוואה מראה מילה מילה מה חסר ומה שונה מהחוברת. אפשר לבדוק גם את הפיסוק.</p></div>' +
+      '<div class="card"><div class="row"><select id="xsel" aria-label="איזה טקסט">' + opts + '</select>' +
+      '<label class="row" style="gap:6px"><input type="checkbox" id="xstrict"' + (X.strict ? ' checked' : '') + '> לבדוק גם פיסוק</label></div>' +
+      '<div class="term" style="font-size:1.5rem">' + esc(c.t) + '</div>' +
+      '<textarea class="big" id="xtype" placeholder="כתוב כאן מהזיכרון">' + esc(X.typed) + '</textarea>' +
+      '<div class="row"><button class="btn pri" data-xcheck>בדוק</button><button class="btn" data-xclear>נקה</button><button class="btn" data-xshow aria-pressed="' + X.show + '">' + (X.show ? 'הסתר את הנוסח' : 'הצג את הנוסח') + '</button></div>' +
+      res + (X.show ? '<div class="def"><div class="lbl">נוסח החוברת · עמ\' ' + c.p + '</div><p>' + esc(plain(c.d)) + '</p></div>' : '') + '</div></div>';
+  }
+
+  function guideHtml() {
+    return '<div class="stack guide"><div class="stack" style="gap:8px"><h2 style="font-size:1.9rem">איך עונים בבגרות</h2><p class="lead">לפי עמודים 15–19 בחוברת. בשאלות האלה רוב הנקודות הולכות על מבנה התשובה, לא רק על הידע.</p></div>' +
+      '<h3>שאלת אירוע (פרקים א׳ ו-ד׳)</h3><p>טקסט קצר ושאלת ציין-הצג-הסבר על מושג. בשאלה חד-צדדית יש סעיף אחד, בדו-צדדית שני סעיפים.</p>' +
+      '<ol><li>לקרוא את השאלה ("ציין והצג את...").</li><li>להדגיש בשאלה מילות מפתח (עוגנים): איזה מושג מבקשים, והיכן הוא מופיע בקטע.</li><li>לקרוא את קטע המקור.</li><li>לסמן בקטע את המשפט שבו מופיע המושג, לפי העוגנים. זה הציטוט.</li><li>להסיק מהציטוט מהו המושג.</li><li>לכתוב את התשובה לפי כללי צהצ"ה.</li></ol>' +
+      '<div class="tbl"><table><tr><th>ציין</th><td>שם המושג (גישה, זכות, עקרון, מדיניות וכו׳).</td></tr><tr><th>הצג</th><td>הגדרת המושג, הגדרה "יבשה" מהחוברת.</td></tr><tr><th>צטט</th><td>המשפט מהקטע שמתייחס לפחות לאחד ממרכיבי ההגדרה.</td></tr><tr><th>הסבר</th><td>הקשר בין הציטוט למושג, במילים שלך. בקישור חוזרים על רכיב ממה שכתבת ב"הצג", אחרת יסיקו שלא זיהית נכון.</td></tr></table></div>' +
+      '<div class="tmpl">בקטע כתוב ש"(ציטוט)". (מילות השאלה, למשל: העיקרון הדמוקרטי שנפגע הוא) + שם המושג, מכיוון ש(הציטוט במילים שלך + כמה מילים מההגדרה). כלומר...</div>' +
+      '<h3>שאלת עמ"ר – עמדה (פרק ד׳)</h3><p>בניית טיעון: טענה + נימוק בעד + נימוק נגד.</p>' +
+      '<p><b>לפני הכתיבה:</b> לזהות את הסוגיה שבמחלוקת, לרשום מושגים מהחומר שקשורים אליה, ולמיין אותם לבעד ולנגד.</p>' +
+      '<div class="tbl"><table><tr><th>חלק</th><th>משקל</th><th>מה כותבים</th></tr>' +
+      '<tr><td>טענה</td><td>20%</td><td>עמדה ולא התלבטות, בגוף ראשון: "אני בעד / אני מתנגד / לדעתי צריך..." + הסוגיה שבמחלוקת. העמדה לא חייבת להיות האמיתית שלך.</td></tr>' +
+      '<tr><td>נימוק בעד</td><td>40%</td><td>ציין מושג, הגדר אותו, וקשר אותו לטענה כך שיתמוך בה.</td></tr>' +
+      '<tr><td>נימוק נגד</td><td>40%</td><td>מושג אחר: ציין, הגדר, וקשר כך שיתמוך בעמדה ההפוכה.</td></tr></table></div>' +
+      '<ul><li>שני הנימוקים נפרדים ושונים, וכל אחד מבוסס על מושג אחר.</li><li>הנימוק מתייחס ישירות לסוגיה, ואפשר להיעזר בדוגמאות קונקרטיות.</li></ul>' +
+      '<h3>שאלות ידע (פרק ב׳) ושאלת טקסט (פרק ג׳)</h3><p>שאלות ידע מבוססות על הוראה אחת או שתיים ועל מושגים מהחומר. בפרק ג׳ יש קטע קריאה ושלוש שאלות, ועונים על שתיים, כל אחת בשני חלקים של הצג-הסבר. הפירוט המלא בחוברת (עמ׳ 16–17) מופיע כתמונה, אז כדאי לעבור עליו שם.</p>' +
+      '<div class="row"><button class="btn pri" data-go="exam">לתרגול שאלות אירוע</button></div></div>';
+  }
+
+  /* ---------- render & events ---------- */
+  var root = document.getElementById('view');
+  function render() {
+    document.getElementById('nav').innerHTML = navHtml();
+    var h = '';
+    if (view === 'home') h = homeHtml();
+    else if (/^s[1-6]$/.test(view)) h = sessionHtml(+view[1]);
+    else if (view === 'cards') h = cardsHtml();
+    else if (view === 'exam') h = examHtml();
+    else if (view === 'exact') h = exactHtml();
+    else h = guideHtml();
+    root.innerHTML = h;
+    var cur = document.querySelector('.nav [aria-current]'); if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+
+  document.getElementById('app').addEventListener('click', function (ev) {
+    var t = ev.target.closest('button, .ans, [data-go]'); if (!t) return;
+    var d = t.dataset;
+    if (d.go) { go(d.go); return; }
+    if (d.cards) { startCards(d.cards); go('cards'); return; }
+    if (d.jump) {
+      var c = BY[d.jump]; view = 's' + c.s; openAns = {}; openAns[c.id] = true;
+      try { history.replaceState(null, '', '#' + view); } catch (e) {}
+      render(); var el = document.getElementById('c-' + c.id); if (el) el.scrollIntoView(); return;
+    }
+    if (d.open) { if (hideMode) { openAns[d.open] = true; t.classList.add('open'); } return; }
+    if ('toggleHide' in d) { hideMode = !hideMode; openAns = {}; try { localStorage.setItem('civics-hide', hideMode ? '1' : '0'); } catch (e) {} render(); return; }
+    if (d.grade) {
+      grade(d.grade, +d.q);
+      var art = document.getElementById('c-' + d.grade), stt = status(d.grade), pill = art && art.querySelector('.pill');
+      if (pill) { pill.className = 'pill ' + stt[0]; pill.textContent = d.q === '2' ? 'סומן: ידעתי' : 'סומן: עוד לא'; }
+      return;
+    }
+    if (d.exact) { X.id = d.exact; X.typed = ''; X.checked = false; X.show = false; go('exact'); return; }
+    if ('restart' in d) { var sc = document.getElementById('scope'); startCards(sc ? sc.value : F.scope); render(); return; }
+    if ('reveal' in d) { var ta = document.getElementById('ftype'); F.typed = ta ? ta.value : ''; F.shown = true; render(); return; }
+    if (d.rate) {
+      var id = F.q[F.i], q = +d.rate; grade(id, q); F.tally[q]++;
+      if (q === 0 && !F.requeued[id]) { F.requeued[id] = 1; F.q.push(id); }
+      F.i++; F.shown = false; F.typed = ''; render(); window.scrollTo(0, 0); return;
+    }
+    if (d.etab) { E.tab = d.etab; render(); return; }
+    if (d.ev) {
+      var e = EV[E.order[E.i]], ta2 = document.getElementById('etype'); E.typed = ta2 ? ta2.value : '';
+      E.pick = d.ev; var ok = e.item ? d.ev === e.item : d.ev === e.a; if (!ok) grade(e.a, 0); render(); return;
+    }
+    if ('evnext' in d) { E.i = (E.i + 1) % EV.length; if (E.i === 0) E.order = shuffle(E.order); E.pick = null; E.typed = ''; render(); window.scrollTo(0, 0); return; }
+    if (d.mc) { M.pick = d.mc; if (d.mc !== M.cur.id) grade(M.cur.id, 0); render(); return; }
+    if ('mcnext' in d) { newMc(); render(); return; }
+    if ('xcheck' in d) { X.typed = document.getElementById('xtype').value; X.checked = true; render(); return; }
+    if ('xclear' in d) { X.typed = ''; X.checked = false; render(); return; }
+    if ('xshow' in d) { X.typed = document.getElementById('xtype').value; X.show = !X.show; render(); return; }
+  });
+  document.getElementById('app').addEventListener('change', function (ev) {
+    var t = ev.target;
+    if (t.id === 'scope') { startCards(t.value); render(); }
+    if (t.id === 'mcscope') { M.scope = t.value; newMc(); render(); }
+    if (t.id === 'xsel') { X.id = t.value; X.typed = ''; X.checked = false; X.show = false; render(); }
+    if (t.id === 'xstrict') { X.strict = t.checked; X.typed = document.getElementById('xtype').value; render(); }
+  });
+  document.getElementById('app').addEventListener('input', function (ev) {
+    var t = ev.target;
+    if (t.id === 'ftype') F.typed = t.value;
+    if (t.id === 'etype') E.typed = t.value;
+    if (t.id === 'xtype') X.typed = t.value;
+  });
+  window.addEventListener('hashchange', function () { var h = location.hash.slice(1); if (VIEWS.indexOf(h) >= 0 && h !== view) { view = h; render(); } });
+
+  if (view === 'cards') startCards('due');
+  render();
+})();
+</script>
+</body>
+</html>
