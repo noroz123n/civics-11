@@ -160,6 +160,15 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
 .verdict.y { color: var(--good); }
 .verdict.n { color: var(--bad); }
 .empty { background: var(--surface); border: 1px dashed var(--line); border-radius: var(--r); padding: 18px; color: var(--muted); }
+.abox { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; display: grid; gap: 8px; }
+.abox.ours { background: var(--accent-soft); border-color: var(--accent-soft); }
+.atext { line-height: 1.75; overflow-wrap: anywhere; }
+.tag { justify-self: start; font-size: .78rem; font-weight: 700; padding: 1px 10px; border-radius: 999px; background: var(--warn-soft); }
+.tag.ok { background: var(--good-soft); color: var(--good); }
+.links { gap: 14px; margin-top: 4px; font-size: .9rem; }
+a { color: var(--accent); }
+ul.arch { margin: 0; padding-inline-start: 1.2em; display: grid; gap: 4px; font-size: .95rem; }
+ul.arch .pill { margin-inline-start: 6px; }
 .guide h3 { font-size: 1.3rem; margin-top: 8px; }
 .guide ol, .guide ul { margin: 0; padding-inline-start: 1.3em; display: grid; gap: 4px; }
 .tmpl { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; font-family: var(--font-display); font-size: 1.05rem; }
@@ -183,8 +192,18 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
   <main class="gut"><div class="col" id="view"></div></main>
 </div>
 
-<script src="data1.js?v=2"></script>
-<script src="data2.js?v=2"></script>
+<script>window.CIV_LINK_ONLY = true; /* אתר ציבורי: קטעי הבחינות ודגמי התשובות מוצגים כקישור לשאלון הרשמי. כדי להציג אותם בתוך האתר, שנה ל-false */</script>
+<script src="data1.js?v=3"></script>
+<script src="data2.js?v=3"></script>
+<script src="exams/w26_34215.js?v=3"></script>
+<script src="exams/w26_34225.js?v=3"></script>
+<script src="exams/w26_34281.js?v=3"></script>
+<script src="exams/s25_34281.js?v=3"></script>
+<script src="exams/w21_34281.js?v=3"></script>
+<script src="exams/s19_34281.js?v=3"></script>
+<script src="exams/w19_34281.js?v=3"></script>
+<script src="exams/s18_34281.js?v=3"></script>
+<script src="exams/archive.js?v=3"></script>
 <script>
 (function () {
   var D = window.CIV, ALL = D.concepts, EV = D.events, BY = {};
@@ -330,7 +349,7 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
       '<p class="meta">' + list.length + ' מושגים · ' + r.m + ' בשליטה · ' + r.seen + ' תורגלו</p>' +
       '<div class="row"><button class="btn" data-toggle-hide aria-pressed="' + hideMode + '">' + (hideMode ? 'מצב הסתרה פעיל' : 'הסתר תשובות') + '</button>' +
       '<button class="btn pri" data-cards="' + n + '">לשנן את המפגש</button>' +
-      (evs ? '<button class="btn" data-go="exam">' + evs + ' שאלות אירוע</button>' : '') + '</div></div>' + out +
+      (qsOfSession(n).length ? '<button class="btn" data-rsessgo="' + n + '">' + qsOfSession(n).length + ' שאלות מבגרויות אמיתיות</button>' : '') + '</div></div>' + out +
       (n < 6 ? '<div class="row" style="justify-content:flex-end"><button class="btn" data-go="s' + (n + 1) + '">למפגש ' + (n + 1) + '</button></div>' : '') + '</div>';
   }
 
@@ -374,7 +393,7 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
   }
 
   /* exam */
-  var E = { tab: 'events', order: shuffle(EV.map(function (e, i) { return i; })), i: 0, pick: null, typed: '' };
+  var E = { tab: 'real', order: shuffle(EV.map(function (e, i) { return i; })), i: 0, pick: null, typed: '' };
   var M = { scope: 'all', cur: null, opts: [], pick: null };
   var STOP = { 'עקרון': 1, 'הזכות': 1, 'זכות': 1, 'זכויות': 1, 'חוק': 1, 'יסוד': 1, 'של': 1, 'על': 1, 'או': 1, 'עם': 1, 'בין': 1, 'מושג': 1, 'רקע': 1, 'הגישה': 1, 'רעיון': 1, 'מדינה': 1, 'מדינת': 1, 'שיש': 1, 'בה': 1 };
   function reEsc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
@@ -399,8 +418,10 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
     M.cur = c; M.opts = shuffle([c].concat(d)); M.pick = null;
   }
   function examHtml() {
-    var tabs = '<div class="tabs2"><button class="btn" aria-pressed="' + (E.tab === 'events') + '" data-etab="events">שאלות אירוע</button><button class="btn" aria-pressed="' + (E.tab === 'mc') + '" data-etab="mc">זיהוי מושג לפי הגדרה</button></div>';
+    var tabs = '<div class="tabs2"><button class="btn" aria-pressed="' + (E.tab === 'real') + '" data-etab="real">בחינות בגרות אמיתיות</button><button class="btn" aria-pressed="' + (E.tab === 'events') + '" data-etab="events">שאלות אירוע לתרגול</button><button class="btn" aria-pressed="' + (E.tab === 'mc') + '" data-etab="mc">זיהוי מושג לפי הגדרה</button></div>';
     var head = '<div class="stack" style="gap:8px"><h2 style="font-size:1.9rem">תרגול בגרות</h2>' + tabs + '</div>';
+    if (E.tab === 'real') return '<div class="stack">' + head + realHtml() + '</div>';
+    if (E.tab === 'events') head += '<p class="meta">הקטעים בלשונית הזאת נכתבו לתרגול, בסגנון הבגרות. שאלות מבחינות אמיתיות נמצאות בלשונית "בחינות בגרות אמיתיות".</p>';
     if (E.tab === 'mc') {
       if (!M.cur) newMc();
       var c = M.cur, opts = '<option value="all">כל המפגשים</option>' + D.sessions.map(function (s) { return '<option value="' + s.n + '">מפגש ' + s.n + '</option>'; }).join('');
@@ -439,6 +460,68 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
   }
   var SH = {};
   function shuffleOnce(key, arr) { if (!SH[key]) SH[key] = shuffle(arr); return SH[key]; }
+
+  /* real bagrut exams */
+  var RX = D.exams || [], RBY = {};
+  RX.forEach(function (ex) { ex.qs.forEach(function (q) { q.ex = ex; RBY[ex.id + ':' + q.n] = q; }); });
+  RX.forEach(function (ex) { ex.qs.forEach(function (q) {
+    var r = q.ref && RBY[q.ref]; if (!r) return;
+    ['off', 'note', 'ours', 'same', 'diff', 'text'].forEach(function (k) { if (q[k] === undefined && r[k] !== undefined) q[k] = r[k]; });
+  }); });
+  RX.sort(function (a, b) { return b.year - a.year; });
+  var LINKONLY = !!window.CIV_LINK_ONLY;
+  var R = { mode: 'list', list: [], i: 0, off: false, ours: false, typed: '' };
+  function fmt(t) { return esc(t).replace(/\n/g, '<br>').replace(/(^|<br>)([^<:•"]{1,45}:)/g, '$1<b>$2</b>'); }
+  function qsOfSession(n) {
+    var out = [];
+    RX.forEach(function (ex) { ex.qs.forEach(function (q) { if ((q.c || []).some(function (id) { return BY[id] && BY[id].s === n; })) out.push(q); }); });
+    return out;
+  }
+  function openList(list, i) { R.mode = 'q'; R.list = list; R.i = i || 0; R.off = false; R.ours = false; R.typed = ''; }
+  function realHtml() {
+    if (R.mode === 'q' && R.list.length) return realQHtml();
+    var total = 0; RX.forEach(function (e) { total += e.qs.length; });
+    var sopts = '<option value="0">בחר מפגש…</option>' + D.sessions.map(function (s) { return '<option value="' + s.n + '">מפגש ' + s.n + ' – ' + esc(s.title) + ' (' + qsOfSession(s.n).length + ' שאלות)</option>'; }).join('');
+    var cards = RX.map(function (ex) {
+      return '<div class="srow"><div class="snum" style="font-size:1.25rem">' + ex.year + '</div><div style="min-width:0"><h3>' + esc(ex.title) + '</h3>' +
+        '<div class="meta">' + ex.qs.length + ' שאלות · עם דגם תשובות רשמי' + (ex.flex ? ' · תוכנית הבגרויות הגמישה' : '') + '</div>' +
+        '<div class="row links"><a href="' + ex.pdf + '" target="_blank" rel="noopener">השאלון הרשמי</a><a href="' + ex.ans + '" target="_blank" rel="noopener">דגם התשובות הרשמי</a></div></div>' +
+        '<div class="row"><button class="btn pri" data-rex="' + ex.id + '">לפתור</button></div></div>';
+    }).join('');
+    var have = {}; RX.forEach(function (e) { have[e.pdf] = 1; });
+    var arch = (D.archive || []).map(function (a) {
+      return '<li><a href="' + a.pdf + '" target="_blank" rel="noopener">' + esc(a.label) + ' · שאלון ' + esc(a.q) + '</a>' + (have[a.pdf] ? ' <span class="pill ok">יש באתר עם תשובות</span>' : '') + '</li>';
+    }).join('');
+    return '<p class="lead">' + total + ' שאלות מ-' + RX.length + ' בחינות בגרות אמיתיות, שלכל אחת מהן פרסם משרד החינוך דגם תשובות רשמי. ליד כל שאלה אפשר לראות את התשובה הרשמית, וגם תשובה מלאה לפי ההגדרות של החוברת ולפי מבנה ציין-הצג-צטט-הסבר.</p>' +
+      '<div class="row"><select id="rsess" aria-label="שאלות לפי מפגש">' + sopts + '</select><span class="meta">או בחר בחינה שלמה:</span></div>' +
+      '<div class="sess">' + cards + '</div>' +
+      '<div class="stack" style="gap:6px"><h3 style="font-size:1.25rem">כל השאלונים במאגר משרד החינוך</h3><p class="meta">לבחינות שאין להן כאן תשובות, משרד החינוך לא פרסם דגם תשובות. אפשר לפתור אותן לתרגול עצמי. עוד חומר רשמי: <a href="' + D.bank + '" target="_blank" rel="noopener">עמוד הבגרות באזרחות במשרד החינוך</a> (כולל מאגר שאלות לפי נושאים).</p><ul class="arch">' + arch + '</ul></div>';
+  }
+  function realQHtml() {
+    var q = R.list[R.i], ex = q.ex;
+    var h = '<div class="card"><div class="row" style="justify-content:space-between"><button class="chip" data-rback>חזרה לרשימה</button><span class="meta">' + (R.i + 1) + ' / ' + R.list.length + '</span></div>' +
+      '<div class="eyebrow">' + esc(ex.title) + ' · שאלה ' + esc(q.n) + ' · ' + esc(q.part) + '</div>';
+    if (q.text) h += LINKONLY ? '<p class="meta">הקטע מופיע בשאלון הרשמי: <a href="' + ex.pdf + '" target="_blank" rel="noopener">פתח את השאלון</a> (שאלה ' + esc(q.n) + ').</p>' : '<div class="scen">' + esc(q.text).replace(/\n/g, '<br>') + '</div>';
+    h += '<p><b>' + esc(q.q) + '</b></p>' +
+      '<textarea id="rtype" placeholder="כתוב כאן את התשובה שלך, ורק אחר כך פתח את התשובות">' + esc(R.typed) + '</textarea>' +
+      '<div class="row"><button class="btn" data-roff aria-pressed="' + R.off + '">תשובה רשמית (משרד החינוך)</button><button class="btn" data-rours aria-pressed="' + R.ours + '">תשובה לפי החוברת</button></div>';
+    if (R.off) {
+      h += '<div class="abox"><div class="lbl">דגם התשובות הרשמי – ' + esc(ex.title) + '</div>' +
+        (LINKONLY ? '<p><a href="' + ex.ans + '" target="_blank" rel="noopener">פתח את דגם התשובות הרשמי</a> (שאלה ' + esc(q.n) + ').</p>' : '<div class="atext">' + fmt(q.off || '') + '</div>') +
+        (q.note && !LINKONLY ? '<p class="note"><span>הערת הבודקים</span>' + esc(q.note) + '</p>' : '') +
+        (ex.general && !LINKONLY ? '<p class="note"><span>מסקנות כלליות</span>' + esc(ex.general) + '</p>' : '') +
+        (LINKONLY ? '' : '<a href="' + ex.ans + '" target="_blank" rel="noopener">למסמך המקורי</a>') + '</div>';
+    }
+    if (R.ours) {
+      h += '<div class="abox ours"><div class="lbl">תשובה מלאה לפי החוברת</div>' +
+        '<span class="tag ' + (q.same ? 'ok' : 'lrn') + '">' + (q.same ? 'התשובה הרשמית תואמת להגדרות החוברת' : 'יש הבדל מהחוברת או שהמושג אינו בחוברת') + '</span>' +
+        (q.diff ? '<p class="note">' + esc(q.diff) + '</p>' : '') + '<div class="atext">' + fmt(q.ours || '') + '</div></div>';
+    }
+    var cs = (q.c || []).filter(function (id) { return BY[id]; });
+    if (cs.length) h += '<div class="vs">מושגים בחוברת:' + cs.map(function (id) { return '<button class="chip" data-jump="' + id + '">' + esc(BY[id].t) + '</button>'; }).join('') + '</div>';
+    h += '<div class="row" style="justify-content:space-between">' + (R.i > 0 ? '<button class="btn" data-rnav="-1">הקודמת</button>' : '<span></span>') + (R.i < R.list.length - 1 ? '<button class="btn pri" data-rnav="1">השאלה הבאה</button>' : '<button class="btn" data-rback>סיום – חזרה לרשימה</button>') + '</div></div>';
+    return h;
+  }
 
   /* exact writing */
   var X = { id: 'p13', strict: true, typed: '', checked: false, show: false };
@@ -529,6 +612,11 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
     if ('evnext' in d) { E.i = (E.i + 1) % EV.length; if (E.i === 0) E.order = shuffle(E.order); E.pick = null; E.typed = ''; render(); window.scrollTo(0, 0); return; }
     if (d.mc) { M.pick = d.mc; if (d.mc !== M.cur.id) grade(M.cur.id, 0); render(); return; }
     if ('mcnext' in d) { newMc(); render(); return; }
+    if (d.rex) { var ex = RX.filter(function (x) { return x.id === d.rex; })[0]; openList(ex.qs, 0); render(); window.scrollTo(0, 0); return; }
+    if (d.rsessgo) { E.tab = 'real'; openList(qsOfSession(+d.rsessgo), 0); go('exam'); return; }
+    if ('rback' in d) { R.mode = 'list'; render(); window.scrollTo(0, 0); return; }
+    if ('roff' in d || 'rours' in d) { var rt = document.getElementById('rtype'); R.typed = rt ? rt.value : R.typed; if ('roff' in d) R.off = !R.off; else R.ours = !R.ours; render(); return; }
+    if (d.rnav) { R.i += +d.rnav; R.off = false; R.ours = false; R.typed = ''; render(); window.scrollTo(0, 0); return; }
     if ('xcheck' in d) { X.typed = document.getElementById('xtype').value; X.checked = true; render(); return; }
     if ('xclear' in d) { X.typed = ''; X.checked = false; render(); return; }
     if ('xshow' in d) { X.typed = document.getElementById('xtype').value; X.show = !X.show; render(); return; }
@@ -537,6 +625,7 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
     var t = ev.target;
     if (t.id === 'scope') { startCards(t.value); render(); }
     if (t.id === 'mcscope') { M.scope = t.value; newMc(); render(); }
+    if (t.id === 'rsess' && t.value !== '0') { var ql = qsOfSession(+t.value); if (ql.length) { openList(ql, 0); render(); window.scrollTo(0, 0); } }
     if (t.id === 'xsel') { X.id = t.value; X.typed = ''; X.checked = false; X.show = false; render(); }
     if (t.id === 'xstrict') { X.strict = t.checked; X.typed = document.getElementById('xtype').value; render(); }
   });
@@ -545,6 +634,7 @@ select { border: 1px solid var(--line); border-radius: 999px; background: var(--
     if (t.id === 'ftype') F.typed = t.value;
     if (t.id === 'etype') E.typed = t.value;
     if (t.id === 'xtype') X.typed = t.value;
+    if (t.id === 'rtype') R.typed = t.value;
   });
   window.addEventListener('hashchange', function () { var h = location.hash.slice(1); if (VIEWS.indexOf(h) >= 0 && h !== view) { view = h; render(); } });
 

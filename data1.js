@@ -1,6 +1,8 @@
 /* חומר הלימוד – מפגשים 1–3. d = הגדרה בנוסח החוברת (** = מילות מפתח), it = פירוט, x = בקצרה, e = דוגמה, m = טריק זכירה, v = לא לבלבל עם, sum = נוסח מסוכם ולא ציטוט */
 window.CIV = window.CIV || { concepts: [], events: [] };
 CIV.add = function (s, arr) { arr.forEach(function (c) { c.s = s; CIV.concepts.push(c); }); };
+CIV.exams = [];
+CIV.addExam = function (e) { CIV.exams.push(e); };
 
 CIV.sessions = [
   { n: 1, title: `מסמכי היסוד והרעיון הלאומי`, pages: `30–38`, time: `כשעה` },
